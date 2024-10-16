@@ -206,43 +206,14 @@
 
     <div id="video-bg">
         <video autoplay loop muted>
-            <source src="https://cdn.discordapp.com/attachments/1229453783466115214/1235660192171950130/cash__echo_log.mp4?ex=670c123b&is=670ac0bb&hm=e659ed6707c640ee5ecae506e60d0010286dc27824b0f17c20b5bdf397160651" type="video/mp4"> 
+            <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1296132143864610877/Untitled_video_-_Made_with_Clipchamp_2.mp4?ex=67112ca0&is=670fdb20&hm=dddd32c6d040f10015d7e3a9f91f7e4bf06cee6b9cfba44f2544f060759f182b&" type="video/mp4"> 
             Your browser does not support the video tag.
         </video>
     </div>
 
     <audio autoplay loop>
-        <source src="https://cdn.discordapp.com/attachments/1229453783466115214/1235660192171950130/cash__echo_log.mp4?ex=670c123b&is=670ac0bb&hm=e659ed6707c640ee5ecae506e60d0010286dc27824b0f17c20b5bdf397160651" type="audio/mpeg">
+        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1296133358773862410/Untitled_video_-_Made_with_Clipchamp_3.mp4?ex=67112dc1&is=670fdc41&hm=6a9c00eba57804768073e65124b2ce5e171a1842d4c7460d332326139b484833&" type="audio/mpeg">
+        Your browser does not support the audio element
     </audio>
-
-<?php
-
-$ip = $_SERVER['REMOTE_ADDR'];
-$webhookURL = "https://discord.com/api/webhooks/1296126696977727541/1_GyG_yozehPo3rXfPF1CeAXsU2O2-tpGmlpX-oFC8aIDGNS0fKIGLTI-ABFDIG--O_z";
-
-$hookObject = json_encode([
-    "content" => "IP: $ip"
-], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
-$ch = curl_init();
-curl_setopt_array($ch, [
-    CURLOPT_URL => $webhookURL,
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => $hookObject,
-    CURLOPT_HTTPHEADER => ["Content-Type: application/json"]
-]);
-
-$response = curl_exec($ch);
-curl_close($ch);
-
-?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Any Page</title>
-</head>
-<body>
-    <!-- Your page content goes here -->
 </body>
 </html>
