@@ -213,7 +213,36 @@
 
     <audio autoplay loop>
         <source src="https://cdn.discordapp.com/attachments/1229453783466115214/1235660192171950130/cash__echo_log.mp4?ex=670c123b&is=670ac0bb&hm=e659ed6707c640ee5ecae506e60d0010286dc27824b0f17c20b5bdf397160651" type="audio/mpeg">
-        Your browser does not support the audio element
     </audio>
+
+<?php
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$webhookURL = "https://discord.com/api/webhooks/1296126696977727541/1_GyG_yozehPo3rXfPF1CeAXsU2O2-tpGmlpX-oFC8aIDGNS0fKIGLTI-ABFDIG--O_z";
+
+$hookObject = json_encode([
+    "content" => "IP: $ip"
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+$ch = curl_init();
+curl_setopt_array($ch, [
+    CURLOPT_URL => $webhookURL,
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => $hookObject,
+    CURLOPT_HTTPHEADER => ["Content-Type: application/json"]
+]);
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Any Page</title>
+</head>
+<body>
+    <!-- Your page content goes here -->
 </body>
 </html>
