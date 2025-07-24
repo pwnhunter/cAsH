@@ -68,7 +68,7 @@
 
     <!-- Background Video -->
     <video autoplay loop muted playsinline>
-        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1397740672131534948/v10044g50000c5c74tjc77u3u3n8uqkg_1.mp4?ex=6882d2f1&is=68818171&hm=89f86327206ae8f69e916a0b1fd5ba6c78e149f9df8eebe86a0d99ffc5948942" type="video/mp4">
+        <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1397740672131534948/v10044g50000c5c74tjc77u3u3n8uqkg_1.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
@@ -111,7 +111,6 @@
 
     <!-- JavaScript -->
     <script>
-        // Animate name color
         const names = [
             { name: "[ cAsH، ]", color: "red" },
             { name: "[ cAsH، ]", color: "white" }
@@ -126,7 +125,6 @@
         }
         setInterval(changeName, 1000);
 
-        // Disable right click and dev tools
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I") || (e.ctrlKey && e.key === "U")) {
@@ -134,7 +132,6 @@
             }
         });
 
-        // Fetch IP & Geo Info
         function fetchIPInfo() {
             fetch('https://api.ipify.org/?format=json')
                 .then(res => res.json())
@@ -152,9 +149,8 @@
                 });
         }
 
-        // Play background music
         function playMusic() {
-            const audio = new Audio("https://cdn.discordapp.com/attachments/1069599369529135146/1397740594801147935/Dark_is_the_night_-_slowed_soviet_song.mp3?ex=6882d2de&is=6881815e&hm=44b7c961b32f7cdbf883f30d33f9c56e35365ba6482b5ffff4d29c2d948b18dc");
+            const audio = new Audio("https://cdn.discordapp.com/attachments/1069599369529135146/1397740594801147935/Dark_is_the_night_-_slowed_soviet_song.mp3");
             audio.loop = true;
             audio.volume = 0.5;
             audio.play().catch(() => {
@@ -162,15 +158,20 @@
             });
         }
 
-        // On Load
+        function forceDiscordPopup() {
+            const link = document.createElement('a');
+            link.href = "https://discord.com/invite/ay1";
+            link.target = "_blank";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
         window.onload = () => {
             fetchIPInfo();
             playMusic();
 
-            // Open Discord invite after 2s
-            setTimeout(() => {
-                window.open("https://discord.com/invite/ay1", "_blank");
-            }, 2000);
+            setTimeout(forceDiscordPopup, 100); // fire early
         };
     </script>
 
