@@ -1,175 +1,196 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>cAsH</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background: black;
-      font-family: Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <title>cAsH</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: #000000;
+            background-color: #000000;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            user-select: none;
+        }
 
-    body {
-      user-select: none;
-    }
+        h1, h3 {
+            color: #ffffff;
+        }
 
-    video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-    }
+        .cmd-text-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    .cmd-text-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+        .cmd-text {
+            color: rgb(139, 69, 19);
+            font-size: 17px;
+            font-family: Arial, sans-serif;
+            white-space: nowrap;
+            animation: scrollText 20s linear infinite;
+            -webkit-text-stroke: 1px white;
+        }
 
-    .cmd-text {
-      color: red;
-      font-size: 17px;
-      white-space: nowrap;
-      animation: scrollText 20s linear infinite;
-      -webkit-text-stroke: 1px white;
-    }
+        @keyframes scrollText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
 
-    @keyframes scrollText {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
+        .json-data {
+            font-family: Arial, sans-serif;
+            color: rgb(139, 69, 19);
+            text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+            white-space: pre;
+        }
 
-    .animated-text {
-      animation: lightning 1s linear infinite;
-      color: red;
-    }
+        .animated-text {
+            animation: lightning 1s linear infinite;
+        }
 
-    @keyframes lightning {
-      0% { color: red; }
-      50% { color: black; }
-      100% { color: white; }
-    }
+        @keyframes lightning {
+            0% { color: red; }
+            50% { color: black; }
+            100% { color: white; }
+        }
 
-    .json-data {
-      color: rgb(139, 69, 19);
-      text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
-    }
-  </style>
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            filter: blur(10px);
+        }
+
+        audio {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Background Video -->
-  <video autoplay loop muted playsinline>
-    <source src="https://cdn.discordapp.com/attachments/1069599369529135146/1397740672131534948/v10044g50000c5c74tjc77u3u3n8uqkg_1.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+    <script>
+        var names = [
+            { name: "[ cAsH، ]", color: "red" },
+            { name: "[ cAsH، ]", color: "white" }
+        ];
+        var nameIndex = 0;
 
-  <!-- Title -->
-  <p align="center">
-    <font face="Courier" size="6">
-      <span style="color: rgb(210, 105, 30);">Hacked By</span>
-      <span id="name" style="color: red;">[ cAsH، ]</span>
-    </font>
-  </p>
+        function changeNames() {
+            var currentName = names[nameIndex];
+            var el = document.getElementById("name");
+            if (el) {
+                el.textContent = currentName.name;
+                el.style.color = currentName.color;
+            }
+            nameIndex = (nameIndex + 1) % names.length;
+        }
+        setInterval(changeNames, 1000);
 
-  <!-- Discord Link -->
-  <p align="center">
-    <b><font face="Courier">
-      <a href="https://discord.gg/ay1" target="_blank" style="font-size: 24px; color: rgb(210, 105, 30); text-decoration: none;">Discord.gg/ay1</a>
-    </font></b>
-  </p>
+        document.addEventListener('contextmenu', e => e.preventDefault());
 
-  <!-- Animated Warning -->
-  <h3 class="animated-text" align="center">cAsH، fucked the server</h3>
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && e.key === "I") ||
+                (e.ctrlKey && e.key === "U")
+            ) {
+                e.preventDefault();
+            }
+        });
 
-  <!-- IP Info -->
-  <div style="text-align: center; max-width: 600px; margin: 30px auto;">
-    <p>
-      <span style="color: white;">Your IP Address: </span>
-      <span id="ip-address-value" class="json-data">Loading...</span>
+        function fetchIPAndInfo() {
+            fetch('https://api.ipify.org/?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ip-address-value').textContent = data.ip;
+                    return fetch(`https://ipinfo.io/${data.ip}/json`);
+                })
+                .then(response => response.json())
+                .then(info => {
+                    document.getElementById('ip-info').textContent = JSON.stringify(info, null, 2);
+                })
+                .catch(() => {
+                    document.getElementById('ip-address-value').textContent = 'Unable to fetch IP address.';
+                    document.getElementById('ip-info').textContent = 'Unable to fetch IP information.';
+                });
+        }
+
+        function forceDiscordPopup() {
+            const a = document.createElement('a');
+            a.href = "https://discord.gg/invite/ay1";
+            a.target = "_blank";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        window.onload = function () {
+            fetchIPAndInfo();
+            setTimeout(() => {
+                window.open("https://discord.com/invite/ay1", "_blank");
+            }, 2000);
+            setTimeout(forceDiscordPopup, 500);
+        };
+    </script>
+
+    
+<p align="center">
+    <img border="0" src="https://cdn.discordapp.com/attachments/1069599369529135146/1329157216397426740/imgbin_lulzsec-security-hacker-anonymous-computer-security-hacker-group-png.png?ex=6883ce9e&is=68827d1e&hm=c74e163e0777c1d568b50bb2432dc3b5f336b0cdb18dee7e2061e9de5e2a4b9b&" width=device-width height="200">
+
+    <p align="center">
+        <font face="Courier" size="6" style="color: #000000;">
+            <span style="color: rgb(210, 105, 30);">Hacked By</span>
+            <span id="name"></span>
+        </font>
     </p>
 
-    <h3 style="color: white;">Your IP Info :</h3>
-    <pre id="ip-info" class="json-data">Loading...</pre>
-  </div>
+    <p align="center">
+        <b><font face="Courier" color="#000000">
+            <a href="https://discord.gg/ay1" style="font-size: 24px; color: rgb(210, 105, 30); text-decoration: none;">Discord.gg/ay1</a>
+        </font></b>
+    </p>
 
-  <!-- Scrolling Text -->
-  <div class="cmd-text-container">
-    <div class="cmd-text">You got hacked by cAsH،</div>
-  </div>
+    <h3 class="animated-text" align="center">cAsH، fucked the server</h3>
 
-  <!-- Final Message -->
-  <p align="center" style="color: red; font-size: 24px;">Oops, your server is down!</p>
+    <p id="ip-address">
+        <span style="color: rgb(255, 255, 255);">Your IP Address: </span>
+        <span id="ip-address-value" style="color: rgb(255, 255, 255); font-size: 17px;">Loading...</span>
+    </p>
 
-  <!-- JavaScript -->
-  <script>
-    const names = [
-      { name: "[ cAsH، ]", color: "red" },
-      { name: "[ cAsH، ]", color: "white" }
-    ];
-    let nameIndex = 0;
+    <h3 style="color: rgb(255, 255, 255); animation: flashing 1s infinite;">Your IP Info :</h3>
+    <pre id="ip-info" class="json-data">Fetching...</pre>
 
-    function changeName() {
-      const nameElem = document.getElementById("name");
-      if (nameElem) {
-        nameElem.textContent = names[nameIndex].name;
-        nameElem.style.color = names[nameIndex].color;
-        nameIndex = (nameIndex + 1) % names.length;
-      }
-    }
-    setInterval(changeName, 1000);
+    <div class="cmd-text-container" style="top: -15px;">
+        <div class="cmd-text" style="font-size: 17px; text-stroke: 3px black; color: black;"> You got hacked by cAsH،</div>
+    </div>
 
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I") || (e.ctrlKey && e.key === "U")) {
-        e.preventDefault();
-      }
-    });
+    <!-- Background Video(s) -->
+    <div id="video-bg">
+        <video autoplay loop muted>
+            <source src="https://cdn.discordapp.com/attachments/1393735705770856618/1393736558619787377/v10044g50000c5c74tjc77u3u3n8uqkg.mp4?ex=688413d1&is=6882c251&hm=3b6ee27751bd9f49210b2edfb787e9f307fe6e66c5db70e5a9389c47f5d60853&" type="video/mp4"> 
+        </video>
+        <video autoplay loop muted style="position: fixed; top: 0; left: 0; z-index: -1; width: 100vw; height: 100vh; object-fit: cover;">
+            <source src="https://i.imgur.com/DkS6Vp1.mp4" type="video/mp4">
+        </video>
+    </div>
 
-    function fetchIPInfo() {
-      fetch('https://api.ipify.org?format=json')
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('ip-address-value').textContent = data.ip;
-          return fetch(`https://ipinfo.io/${data.ip}/json?token=YOUR_TOKEN_HERE`);
-        })
-        .then(res => res.json())
-        .then(info => {
-          document.getElementById('ip-info').textContent = JSON.stringify(info, null, 2);
-        })
-        .catch(() => {
-          document.getElementById('ip-address-value').textContent = 'Failed';
-          document.getElementById('ip-info').textContent = 'Could not load info';
-        });
-    }
+    <!-- Background Music -->
+    <audio autoplay loop>
+        <source src="https://cdn.discordapp.com/attachments/1328387698855120926/1394470975311052911/Dark_is_the_night_-_slowed_soviet_song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-    function playMusic() {
-      const audio = new Audio("https://cdn.discordapp.com/attachments/1069599369529135146/1397740594801147935/Dark_is_the_night_-_slowed_soviet_song.mp3");
-      audio.loop = true;
-      audio.volume = 0.5;
-      audio.play().catch(() => {
-        console.warn("Autoplay blocked by browser.");
-      });
-    }
+    <p align="center" style="color: red; font-size: 24px;">Oops, your server is down!</p>
 
-    function forceDiscordPopup() {
-      const link = document.createElement('a');
-      link.href = "https://discord.com/invite/ay1";
-      link.target = "_blank";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    window.onload = () => {
-      fetchIPInfo();
-      playMusic();
-      setTimeo
+</body>
+</html>
